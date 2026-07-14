@@ -1,0 +1,82 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="eY1vJN1nuY_pxmx5svwu">
+    <mxGraphModel dx="748" dy="477" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="REgwk8I1DM6G501pFP4I-1" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;OFDM-IM&lt;/h1&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Diagrama de blocos para ilustrar o funcionamento da simuação.&lt;br&gt;&lt;br&gt;4 subportadoras&lt;br&gt;2 indices por vez&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="180" x="90" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-4" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="REgwk8I1DM6G501pFP4I-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-2" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="Declaração de variáveis&lt;div&gt;&amp;nbsp;e criação de vetores inciais&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="80" x="50" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-7" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="REgwk8I1DM6G501pFP4I-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Calculo da quantidade de bits e crianção da LUT (Look up table)" vertex="1">
+          <mxGeometry height="60" width="120" x="190" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-10" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="REgwk8I1DM6G501pFP4I-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-10" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="YqNRsOfDPfKgCAsKnELr-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Catalogo de verossimilhança" vertex="1">
+          <mxGeometry height="80" width="120" x="354" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-3" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="YqNRsOfDPfKgCAsKnELr-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="380" />
+              <mxPoint x="294" y="380" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-4" edge="1" parent="1" source="REgwk8I1DM6G501pFP4I-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="YqNRsOfDPfKgCAsKnELr-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-9" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Calculo combinações possíveis.&lt;br&gt;2^p" vertex="1">
+          <mxGeometry height="60" width="170" x="329" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="REgwk8I1DM6G501pFP4I-13" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="p é a quantidade total de bits" vertex="1">
+          <mxGeometry height="90" width="190" x="140" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Criação do catalogo_X&lt;br&gt;(N subportadoras, M combinações)" vertex="1">
+          <mxGeometry height="60" width="120" x="234" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Criação do catalogo_Bits&lt;br&gt;(M combinações, p bits)" vertex="1">
+          <mxGeometry height="60" width="120" x="470" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-9" edge="1" parent="1" source="YqNRsOfDPfKgCAsKnELr-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="820" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-12" edge="1" parent="1" source="YqNRsOfDPfKgCAsKnELr-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="YqNRsOfDPfKgCAsKnELr-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="630" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-5" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=10;" value="Geração de bits a partir do indice" vertex="1">
+          <mxGeometry height="100" width="100" x="580" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-7" edge="1" parent="1" source="YqNRsOfDPfKgCAsKnELr-5" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;elbow=vertical;" target="YqNRsOfDPfKgCAsKnELr-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-13" edge="1" parent="1" source="YqNRsOfDPfKgCAsKnELr-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="YqNRsOfDPfKgCAsKnELr-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="YqNRsOfDPfKgCAsKnELr-11" parent="1" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" value="for c= 1:combinacoes" vertex="1">
+          <mxGeometry height="60" width="120" x="650" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="dw-ihd1jp6fGiwDdFZZ8-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Conversão&amp;nbsp;&lt;br&gt;decimal -&amp;gt; Binario" vertex="1">
+          <mxGeometry height="60" width="120" x="820" y="210" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
