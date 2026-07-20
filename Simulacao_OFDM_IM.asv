@@ -3,7 +3,7 @@ clear all; clc; close all;
 
 N = 4;              % total de subportadoras
 K = 2;              % Número de subportadoras ativas
-M = 4;              % Ordem da modulação (4-QAM)
+M = 8;              % Ordem da modulação (4-QAM)
 num_blocos = 100;  % Numero de amostras a serem transmitidas no loop
 nFFT = 124; %Numero de FFT'S
 nCicP = N-K;
@@ -192,19 +192,15 @@ x_tempo = ifft(x_bloco, N);
 %inserçao do prefixo ciclico
 
 x_Cic=[x_tempo(end-nCicP+1:end);x_tempo];
+y_Cic= awgn(x_Cic,SNR)
 
-
-%-------------------------------------
-%Desse modo, o ruido atua sobre o sinal estendido pelo prefixo
-y_Cic= awgn(x_Cic,SNR_dB,'measured');
-%-------------------------------------
 
 
 %------------------------------------------------------------------------------------------------------------------------
 
 %% 4. RECEPTOR (RX)
-y_tempo=y_Cic(nCicP+1:end);
 y_bloco = fft(y_tempo, N);
+
 
 %------------------------------------------------------------------------------------------------------------------------
 %salvando as iformaçoes geradas num vetor
