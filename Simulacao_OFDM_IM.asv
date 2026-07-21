@@ -1,25 +1,24 @@
 
 clear all; clc; close all;
-
+%% Configuraçao do transmissor OFDM-IM
 N = 4;              % total de subportadoras
 K = 2;              % Número de subportadoras ativas
-M = 8;              % Ordem da modulação (4-QAM)
+M = 4;              % Ordem da modulação (4-QAM)
 num_blocos = 100;  % Numero de amostras a serem transmitidas no loop
 nFFT = 124; %Numero de FFT'S
 nCicP = N-K;
-%EbNo_vec= 0:1:2;
+fs=10e6; %frequencia de amostragem (10mhz)
+bw_limit=2e6; %frequencia de corte do hardware (2mhz de banda efetiva)
+
+
+
 
 %----------------------------------
 %Passei a utilizar energia/bit (correçao matematica)
-
 EbNo_vec = 0:2:20               
 %----------------------------------
-%Esse vetor BER vai ser o responsavel por guardar os valores da BER pra
-%cada valor de SNR
+
 BER = zeros(1, length(EbNo_vec));
-
-
-
 
 %vetores pra receber os dados dos blocos gerados
 %x_total e o total de amostras transmitidas
@@ -29,14 +28,8 @@ x_total = zeros(N * num_blocos, 1); % Sinal transmitido perfeito
 y_total = zeros(N * num_blocos, 1); % Sinal recebido com ruído
 
 %-----------------------------------------------------------------------------
-% Quantidade de bits, automatizada para se adaptar a valores variados
 p1 = floor(log2(nchoosek(N,K)));             %indice
-%combinaçeos possiveis(2^K)
 p2 = K*log2(M);             %qam
-%cada subportadora vai enviar 4 simbolos, que tambem carrega 2 bits, logo
-%2bits de
-%portadoras ligadas * 2 bits de simbolos
-
 p = p1 + p2;        %total de bits
 %-----------------------------------------------------------------------------
 
@@ -90,43 +83,24 @@ indices_ativos = LUT(indice_dec+1, :);
 b_sim_matriz = reshape(b_sim, log2(M), K);
 simbolos_dec = bit2int(b_sim_matriz, log2(M));
 qam_sum = qammod(simbolos_dec, M, 'UnitAveragePower', true);
+%-------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+%Plotando a inversa da fft apenas para fins didaticos
 inv=ifft(qam_sum, nFFT);
 inv_plot=stem(inv);
 inv_plot.LineStyle="none";
 inv_plot.Marker = ".";             
 inv_plot.MarkerSize = 1;
 inv_plot.MarkerFaceColor = "auto";
+%-------------------------------------------------------------------------
+
+
 
 hold on;
 
 vec_test_BER = zeros(N,1);
 vec_test_BER(indices_ativos) = qam_sum;
 Catalogo_X(:, c) = vec_test_BER; %Salva o bloco de bits ideiais
-
-
-%-------------------------------------------------------------------------
-%Zona de teste
-
-% matriz_plot=zeros(combinacoes,combinacoes);
-% N = size(matriz_plot,2);
-% x = qam_sum(:).';            % ensure row vector
-% L = numel(x);
-% if L < N
-%     x_padded = [x, zeros(1,N-L,'like',x)];   % zero-pad at end, preserves type/complexity
-% elseif L > N
-%     x_padded = x(1:N);                      % truncate if too long
-% else
-%     x_padded = x;
-% end
-% 
-% 
-% 
-% matriz_plot(c,:) = matriz_plot(c,:) + x_padded;
-
-
-%-------------------------------------------------------------------------
-
-
 
 end
 %% Transmissao
@@ -145,16 +119,14 @@ for snr_indice = 1:length(EbNo_vec)
 %------------------------------------------------
 
 
-    erros=0;
+erros=0;
+
 %a ideia aqui e fazer com que essa minha transmissao e recepçao ocorram em
 %loops, pra pode gerar um erro mais verossimil.
 for b = 1:num_blocos
 bits_tx = randi([0 1], 1, p);
-
-%separando os bits, entre o indice e simbolos
-bits_indice  = bits_tx(1:p1);%aqui a gente pega os dois primeiros bits e usa pra indice
-%os 2 primeiros sao de indice e o restante de simbolos
-bits_simbolo = bits_tx(p1+1:end); %aqui pega os restantes  e usa pra simbolos (informaçao)
+bits_indice  = bits_tx(1:p1);
+bits_simbolo = bits_tx(p1+1:end); 
 
 
 %convetendo os bits de indice que anteriormente estavam em binario p/
@@ -162,14 +134,9 @@ bits_simbolo = bits_tx(p1+1:end); %aqui pega os restantes  e usa pra simbolos (i
 
 dec_indice = bit2int(bits_indice.', p1);
 indices_ativos = LUT(dec_indice + 1, :); % +1 pois o MATLAB começa no índice 1
-
-
-%Mapeamento QAM, utilizando funçoes prontas
-
-
-    b_sim_matriz=reshape(bits_simbolo, log2(M), K);
-    simbolos_dec=bit2int(b_sim_matriz, log2(M));
-    simbolos_qam=qammod(simbolos_dec, M, 'UnitAveragePower', true);
+b_sim_matriz=reshape(bits_simbolo, log2(M), K);
+simbolos_dec=bit2int(b_sim_matriz, log2(M));
+simbolos_qam=qammod(simbolos_dec, M, 'UnitAveragePower', true);
 
 
 %------------------------------------------------------------------------------------------------------------------------
@@ -192,13 +159,56 @@ x_tempo = ifft(x_bloco, N);
 %inserçao do prefixo ciclico
 
 x_Cic=[x_tempo(end-nCicP+1:end);x_tempo];
-y_Cic= awgn(x_Cic,SNR)
 
+
+
+%% Imperfeiçoes de microcontroladores
+%-------------------------------------%
+%            IMPERFEIÇOES             %
+%-------------------------------------%
+
+%Conversor ADC/DAC
+%Assumindo o uso de um ESP32,
+%quantizaçao uniforme   
+% Parâmetros do conversor do ESP32(seguindo o datasheet do produto)
+bits_adc = 12;
+bits_dac = 8;
+niveis = 2^bits_adc;
+
+max_tx=max(abs(x_Cic));
+Delta_tx= 2*max_tx/(2^bits_dac);
+
+tx_re = round(real(x_Cic)/Delta_tx)*Delta_tx;
+tx_im = round(imag(x_Cic)/Delta_tx)*Delta_tx;
+
+x_Cic_Quantizado = tx_re + (1i* tx_im);
+
+
+
+%-------------------------------------
+%Desse modo, o ruido atua sobre o sinal estendido pelo prefixo e quantizado
+y_Cic= awgn(x_Cic_Quantizado,SNR_dB,'measured');
+%-------------------------------------
 
 
 %------------------------------------------------------------------------------------------------------------------------
 
 %% 4. RECEPTOR (RX)
+
+%-----------------------------------------%
+%              Reconstruçao               %
+%-----------------------------------------%
+
+max_rx = max(abs(y_Cic));
+Delta_rx = 2 * max_rx/(2^bits_adc);
+
+
+rx_re = round(real(y_Cic)/Delta_rx)*Delta_rx;
+rx_im = round(imag(y_Cic)/Delta_rx)*Delta_rx;
+y_Cic_Quantizado = rx_re + (1i*rx_im);
+
+
+y_tempo=y_Cic_Quantizado(nCicP+1:end);
 y_bloco = fft(y_tempo, N);
 
 
@@ -237,8 +247,9 @@ BER(snr_indice)=erros/total_bits_TX;
 disp(['SNR = ', num2str(SNR_dB), ' dB | BER = ', num2str(BER(snr_indice))]);
 end
 
+timestamp = char(datetime('now', 'Format', 'yyyy-MM-dd_HH-mm-ss'));
 
-figure;
+fig_constelacao=figure;
 %pontos recebidos com ruido (vermelho)
 plot(real(y_total), imag(y_total), 'r.', 'MarkerSize', 8);
 hold on;
@@ -249,7 +260,7 @@ plot(real(x_total), imag(x_total), 'ko', 'MarkerSize', 8, 'MarkerFaceColor', 'k'
 grid on;
 xlabel('Fase (I) - Parte Real');
 ylabel('Quadratura (Q) - Parte Imaginária');
-title(['Constelação OFDM-IM (N=4, K=2, 4-QAM) - SNR = ', num2str(SNR_dB), ' dB']);
+title(['Constelação OFDM-IM (N=', num2str(N), ', K=', num2str(K), ', ', num2str(M), '-QAM) - SNR = ', num2str(SNR_dB), ' dB']);
 legend('Sinal Recebido (com ruído)', 'Sinal Transmitido (Ideal)', 'Location', 'best');
 
 % Fixa os limites dos eixos X e Y para -2 a +2 para visualização simétrica
@@ -257,13 +268,18 @@ axis([-2 2 -2 2]);
 disp('--- RECEPTOR ---');
 disp('Sinal recebido com ruído na Frequência:');
 disp(y_bloco);
+png_constelacao = ['constelacao_ofdm_im_HardwareLimitado_', timestamp, '.png'];
+exportgraphics(fig_constelacao, png_constelacao, 'Resolution', 300);
+
 
 %% 4. PLOTAR A CURVA DE BER
-figure;
+fig_BER=figure;
 % semilogy é usado porque a BER decai exponencialmente (eixo Y logarítmico)
 semilogy(EbNo_vec, BER, 'bo-', 'LineWidth', 2, 'MarkerSize', 8, 'MarkerFaceColor', 'b');
 grid on;
 xlabel('SNR (dB)');
 ylabel('Bit Error Rate (BER)');
-title('Desempenho de BER do OFDM-IM (N=4, K=2, 4-QAM)');
+title(['Desempenho de BER do OFDM-IM (N=', num2str(N), ', K=', num2str(K), ', ', num2str(M), '-QAM)'])
 axis([min(EbNo_vec) max(EbNo_vec) 1e-5 1]); % Fixa os limites do gráfico
+png_BER = ['BER_ofdm_im_HardwareLimitado_', timestamp, '.png'];
+exportgraphics(fig_BER, png_BER, 'Resolution', 300);
