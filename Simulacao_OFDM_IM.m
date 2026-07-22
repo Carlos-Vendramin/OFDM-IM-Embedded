@@ -11,8 +11,16 @@ fs=10e6; %frequencia de amostragem (10mhz)
 bw_limit=2e6; %frequencia de corte do hardware (2mhz de banda efetiva)
 
 
+%----------------------------------%
+%       Correçao da potencia       %
+%----------------------------------%
 
-    
+Pot_N=N/K;
+Fator_Potencia=sqrt(Pot_N);
+
+%----------------------------------
+
+
 %----------------------------------
 %Passei a utilizar energia/bit (correçao matematica)
 EbNo_vec = 0:1:20               
@@ -82,7 +90,7 @@ indices_ativos = LUT(indice_dec+1, :);
 %-------------------------------------------------------------------------
 b_sim_matriz = reshape(b_sim, log2(M), K);
 simbolos_dec = bit2int(b_sim_matriz, log2(M));
-qam_sum = qammod(simbolos_dec, M, 'UnitAveragePower', true);
+qam_sum = qammod(simbolos_dec, M, 'UnitAveragePower', true)*Fator_Potencia;
 %-------------------------------------------------------------------------
 %-------------------------------------------------------------------------
 %Plotando a inversa da fft apenas para fins didaticos
@@ -131,7 +139,7 @@ dec_indice = bit2int(bits_indice.', p1);
 indices_ativos = LUT(dec_indice + 1, :); % +1 pois o MATLAB começa no índice 1
 b_sim_matriz=reshape(bits_simbolo, log2(M), K);
 simbolos_dec=bit2int(b_sim_matriz, log2(M));
-simbolos_qam=qammod(simbolos_dec, M, 'UnitAveragePower', true);
+simbolos_qam=qammod(simbolos_dec, M, 'UnitAveragePower', true)*Fator_Potencia;
 
 
 %------------------------------------------------------------------------------------------------------------------------
