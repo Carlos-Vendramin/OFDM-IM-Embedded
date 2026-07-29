@@ -17,7 +17,7 @@
 
 
 
-======================Sensoriamento com imperfeições=========================================================
+                                    =====Sensoriamento com imperfeições=====
 
 |Constelação OFDM-IM| Curva de BER |
 :-------------------------------:|:-------------------------------:
@@ -25,7 +25,7 @@
 
 
 |Mapa Range Doppler (Distância real: 1M / Velocidade real: 1 M/s)|
-:-------------------------------:|:-------------------------------:
+|:-------------------------------:|
 |![Constelação OFDM-IM ](Imagens/PNG/SensoriamentoImperfeito/RangeDoppler_ofdm_im_HardwareLimitado_2026-07-29_10-16-50.png)|
 
 
