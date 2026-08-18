@@ -1,33 +1,26 @@
+# Resultados de Simulação - OFDM-IM e Sensoriamento
 
 
+### Caso Ideal (CFO Compensado)
 
-|BER com prefixo cíclico|BER sem prefixo cíclico|
-:-----------------------------------------------------------------------------------------:|:------------------------:
-![BER com prefixo cíclico](Imagens/PNG/SemImperfeicoesHARDWARE/BER_com_PrefixoCiclico.png)|![BER com prefixo cíclico](Imagens/PNG/SemImperfeicoesHARDWARE/BER_sem_PrefixoCiclico.png)|
+| Constelação | BER | Range Doppler |
+| :---: | :---: | :---: |
+| ![Constelação](Imagens/PNG/RangeDoppler_Ideal/constelacao_ofdm_im_Ideal_CFO_compensado.png) | ![BER](Imagens/PNG/RangeDoppler_Ideal/BER_ofdm_im_Ideal_CFO_compensado.png) | ![Range Doppler](Imagens/PNG/RangeDoppler_Ideal/RangeDoppler_ofdm_im_Ideal_CFO_compensado.png) |
 
+### Com Limitação de Banda (BW)
 
-|Constelação com prefixo cíclico| Constelação sem prefixo cíclico
-:-------------------------------:|:-------------------------------:
-|![Constelação com prefixo cíclico](Imagens/PNG/SemImperfeicoesHARDWARE/CONSTELACAO_com_PrefixoCiclico.png)|![Constelação com prefixo cíclico](Imagens/PNG/SemImperfeicoesHARDWARE/CONSTELACAO_sem_PrefixoCiclico.png)|
+| Constelação | BER | Range Doppler |
+| :---: | :---: | :---: |
+| ![Constelação](Imagens/PNG/RangeDoppler_BW/constelacao_ofdm_im_BW.png) | ![BER](Imagens/PNG/RangeDoppler_BW/BER_ofdm_im_BW.png) | ![Range Doppler](Imagens/PNG/RangeDoppler_BW/RangeDoppler_ofdm_im_BW.png) |
 
+### Com Limitação de Quantização
 
-|Constelação com prefixo cíclico e limitações de hardware| BER com prefixo cíclico e limitações de hardware|
-:-------------------------------:|:-------------------------------:
-|![Constelação com prefixo cíclico e limitações de hardware](Imagens/PNG/ComImperfeicoesHARDWARE/constelacao_ofdm_im_HardwareLimitado_2026-07-20_21-41-46.png)|![BER com prefixo cíclico e limitações de hardware](Imagens/PNG/ComImperfeicoesHARDWARE/BER_ofdm_im_HardwareLimitado_2026-07-20_21-41-46.png)|
+| Constelação | BER | Range Doppler |
+| :---: | :---: | :---: |
+| ![Constelação](Imagens/PNG/RangeDoppler_Quantizado/constelacao_ofdm_im_quantizado.png) | ![BER](Imagens/PNG/RangeDoppler_Quantizado/BER_ofdm_im_quantizado.png) | ![Range Doppler](Imagens/PNG/RangeDoppler_Quantizado/RangeDoppler_ofdm_im_Quantizado.png) |
 
+### Com Erro de Frequência (CFO)
 
-
-                                    =====Sensoriamento com imperfeições=====
-
-|Constelação OFDM-IM| Curva de BER |
-:-------------------------------:|:-------------------------------:
-|![Constelação OFDM-IM ](Imagens/PNG/SensoriamentoImperfeito/constelacao_ofdm_im_HardwareLimitado_2026-07-29_10-16-50.png)|![Curva de BER](Imagens/PNG/SensoriamentoImperfeito/BER_ofdm_im_HardwareLimitado_2026-07-29_10-16-50.png)|
-
-
-|Mapa Range Doppler (Distância real: 1M / Velocidade real: 1 M/s)|
-|:-------------------------------:|
-|![Constelação OFDM-IM ](Imagens/PNG/SensoriamentoImperfeito/RangeDoppler_ofdm_im_HardwareLimitado_2026-07-29_10-16-50.png)|
-
-
-
-
+| Constelação | BER | Range Doppler |
+| :---: | :---: | :---: |
+| ![Constelação](Imagens/PNG/RangeDoppler_CFO/constelacao_ofdm_im_CFO.png) | ![BER](Imagens/PNG/RangeDoppler_CFO/BER_ofdm_im_CFO.png) | ![Range Doppler](Imagens/PNG/RangeDoppler_CFO/RangeDoppler_ofdm_im_CFO.png) |
