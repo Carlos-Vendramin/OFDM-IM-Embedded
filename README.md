@@ -1,6 +1,6 @@
 # Resultados de Simulação - OFDM-IM e Sensoriamento
 
-Nos resultados abaixo, foi considerado um alvo localizado a 15 célular com uma velocidade de 10 células.
+Nos resultados abaixo, foi considerado um alvo localizado a 15 células com uma velocidade de 10 células.
 
 Cada célula de resolução equivale a um $\Delta R $
 
