@@ -81,12 +81,25 @@ Habilita_CFO         = true;
 Compensa_CFO         = true;
 Habilita_Quantizacao = true;
 Habilita_Filtro      = true;
-
+Habilita_Rayleigh    = true;
 
 if ~Habilita_Filtro
     H_eff = ones(N, 1);
 end
-
+if Habilita_Rayleigh
+    % numero de taps renomeado para n_taps para evitar conflito com n=N/G
+    n_taps = 10; 
+    
+    h_T = (randn(n_taps, 1) + 1i * randn(n_taps, 1)) / sqrt(2 * n_taps);
+    
+    % Resposta em frequência do canal
+    H_channel = fft(h_T, N);
+else
+    % Se Rayleigh = false, o impulso do canal é ideal e plano
+    h_T = 1; 
+    H_channel = ones(N, 1);
+end
+H_eff_total = H_eff .* H_channel;
 for snr_indice = 1:length(EbNo_vec)
     
     EbNo_dB = EbNo_vec(snr_indice);
@@ -116,10 +129,9 @@ for snr_indice = 1:length(EbNo_vec)
 
     for b = 1:num_blocos
         
-        [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT_var, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro);
-
-        [bits_rx, erros, x_total, y_total, y_eq] = eqlt(b, N, n, G, p_grupo, x_bloco, y_bloco, H_eff, Catalogo_X, Catalogo_Bits, bits_tx, erros, x_total, y_total, y_eq);
+        [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT_var, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T);
         
+        [bits_rx, erros, x_total, y_total, y_eq] = eqlt(b, N, n, G, p_grupo, x_bloco, y_bloco, H_eff_total, Catalogo_X, Catalogo_Bits, bits_tx, erros, x_total, y_total, y_eq);
         
     %-----------------------------------------%
     %              Sensoriamento              %

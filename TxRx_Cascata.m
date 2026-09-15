@@ -2,7 +2,7 @@
 %            Transmissao                    %
 %-------------------------------------------%
 
-function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro)
+function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T)
 
     bits_tx = randi([0 1], 1, p_total);
     x_bloco = zeros(N, 1);
@@ -60,9 +60,9 @@ function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs,
     else
         x_Cic_Final = x_Cic_Filtrado;
     end
-    
+    x_Cic_Fade=filter(h_T, 1, x_Cic_Final);
     %Desse modo, o ruido atua sobre o sinal estendido pelo prefixo e quantizado
-    y_Cic = awgn(x_Cic_Final, SNR_dB, 'measured');
+    y_Cic = awgn(x_Cic_Fade, SNR_dB, 'measured');
 
     % Atualize a chamada do reconstrutor passando as duas flags de CFO separadas
     [rxstate, y_bloco, ~] = reconstrutor(cfo_hz, N, Vetor_tempo, y_Cic, a_filt, b_filt, Delta_rx, nCicP, rxstate, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro);
