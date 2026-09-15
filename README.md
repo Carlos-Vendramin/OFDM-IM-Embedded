@@ -30,3 +30,10 @@ Como utilizou-se uma largura de banda de 20*10^6, logo $\Delta R = 7,5 m$
 | Constelação | BER | Range Doppler |
 | :---: | :---: | :---: |
 | ![Constelação](Imagens/PNG/RangeDoppler_CFO/constelacao_ofdm_im_CFO.png) | ![BER](Imagens/PNG/RangeDoppler_CFO/BER_ofdm_im_CFO.png) | ![Range Doppler](Imagens/PNG/RangeDoppler_CFO/RangeDoppler_ofdm_im_CFO.png) |
+
+
+### Canal Rayleigh multipath
+
+| Constelação | BER | Range Doppler |
+| :---: | :---: | :---: |
+| ![Constelação](Imagens/PNG/Rayleigh/constelacao_ofdm_im_HardwareLimitado_2026-09-14_22-32-29.png) | ![BER](Imagens/PNG/Rayleigh/BER_ofdm_im_HardwareLimitado_2026-09-14_22-32-29.png) | ![Range Doppler](Imagens/PNG/Rayleigh/RangeDoppler_ofdm_im_HardwareLimitado_2026-09-14_22-32-29.png) |
