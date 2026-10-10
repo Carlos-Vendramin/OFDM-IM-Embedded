@@ -21,7 +21,7 @@ function [bits_rx, erros, x_total, y_total, y_eq] = eqlt(b, N, n, G, p_grupo, x_
         Catalogo_X_filt = Catalogo_X .* H_eff_total_grupo;
         distancias = sum(abs(y_grupo - Catalogo_X_filt).^2, 1);
 
-        %encontrando o indice de menor distancia
+        %encontra o indice de menor distancia
         [~, indice_menor] = min(distancias);
         bits_rx((g-1)*p_grupo + 1 : g*p_grupo) = Catalogo_Bits(indice_menor, :);
     end

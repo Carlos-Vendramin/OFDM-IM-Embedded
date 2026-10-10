@@ -4,10 +4,9 @@ N = 64;              % total de subportadoras
 G = 16;               
 n = N / G;           
 k = 3;               
-M = 16;              % Ordem da modulação (M-QAM)
+M = 16;             % Ordem da modulação (M-QAM)
 num_blocos = 1000;  % Numero de amostras a serem transmitidas no loop
-%nFFT = 124; %Numero de FFT'S
-nCicP = 9;
+nCicP = 9;          %tamanho do prefixo ciclico
 
 EbNo_vec = 0:1:20;
 BER = zeros(1, length(EbNo_vec));
@@ -22,7 +21,7 @@ Fator_Potencia = sqrt(Pot_N);
 %       Frequencia e largura de banda       %
 %-------------------------------------------%
 [Fc, Bw, fs, F_Corte, a_filt,b_filt, H_freq, w, H_eff] = freq_bw(N, 2.4e9, 20e6, 20e6, 9.9e6);
-%Correto 2.4e9
+
 %----------------------------------
 
 %-------------------------------------------%
@@ -37,7 +36,7 @@ Fator_Potencia = sqrt(Pot_N);
 %            Declaraçao de vetores RX/TX             %
 %----------------------------------------------------%
 [x_total, y_total, y_eq] = rxtx_Vec(N, num_blocos);
-%correto
+
 %----------------------------------
 
 %-------------------------------------------%
@@ -45,7 +44,7 @@ Fator_Potencia = sqrt(Pot_N);
 %-------------------------------------------%
 [p1, p2, p_grupo, combinacoes_LUT, LUT_var] = LUT(n, k, M);
 p_total = G * p_grupo; 
-%correto
+
 
 %-----------------------------------------------------------------------------
 
@@ -58,7 +57,7 @@ Catalogo_Bits = zeros(combinacoes, p_grupo);
 for c = 1:combinacoes
     [Catalogo_X, qam_sum, Catalogo_Bits, b_indice, b_sim] = ML(p_grupo, c, Catalogo_X, Catalogo_Bits, LUT_var, p1, M, k, Fator_Potencia, n);
 end
-%correto
+
 
 %-----------------------------------------------------------------------------
 
@@ -81,9 +80,8 @@ Habilita_CFO         = true;
 Compensa_CFO         = true;
 Habilita_Quantizacao = true;
 Habilita_Filtro      = true;
-Habilita_Rayleigh    = true;
-%Esse canal rayleigh ai e o seletivo na frequencia
-%tambem e normalizada em 1
+Habilita_Rayleigh    = true; %Canal Rayleigh seletivo na frequencia
+
 
 if ~Habilita_Filtro
     H_eff = ones(N, 1);
@@ -99,15 +97,13 @@ for snr_indice = 1:length(EbNo_vec)
     txstate = zeros(max(length(a_filt)-1, length(b_filt)-1), 1);
     rxstate = zeros(max(length(a_filt)-1, length(b_filt)-1), 1);
     
-%--------------------------------------------------------%
-%               variaveis sensoriamento                  %
-%--------------------------------------------------------%
-%Resoluçao de range
-% 
-% \Delta R = \frac{c}{2B}, Sendo B a largura de banda do sinal. No caso
-% estudado, Delta R = 7.5
-    distancia=1;
-    velocidade=2;
+%-----------------------------------------------------------%
+%               variaveis de sensoriamento                  %
+%-----------------------------------------------------------%
+%Resoluçao dos bins de sensoriamento
+% \Delta R = \frac{c}{2B}, Sendo B a largura de banda do sinal. No caso estudado, Delta R = 7,5
+    distancia=1;  %distancia do alvo em bins. [1 bin = 1 Delta R] => 1 bin = 7,5 metros
+    velocidade=2; %velocidade do alvo em bins. [1 bin = 1 Delta R] => 1 bin = 7,5 metros
 
     Radar_tx_Matriz = zeros(N, num_blocos);
     Radar_rx_Matriz = zeros(N, num_blocos);
@@ -118,12 +114,12 @@ for snr_indice = 1:length(EbNo_vec)
 
     for b = 1:num_blocos
         if Habilita_Rayleigh
-    % numero de taps renomeado para n_taps para evitar conflito com n=N/G
-            n_taps = 10; 
+   
+            n_taps = 10; %numero de taps
             
             h_T = (randn(n_taps, 1) + 1i * randn(n_taps, 1)) / sqrt(2 * n_taps);
             
-    % Resposta em frequência do canal
+            % Resposta em frequência do canal
             H_channel = fft(h_T, N);
         else
             % Se Rayleigh = false, o impulso do canal é ideal e plano
