@@ -2,7 +2,7 @@
 %            Transmissao                    %
 %-------------------------------------------%
 
-function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T)
+function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo, x_Cic_Final] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T)
 
     bits_tx = randi([0 1], 1, p_total);
     x_bloco = zeros(N, 1);
@@ -33,7 +33,7 @@ function [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs,
     %              Imperfeiçoes                 %
     %-------------------------------------------%
     if Habilita_Quantizacao
-        max_tx = (2^11) * Delta_tx; 
+        max_tx = 127 * Delta_tx; 
         re_limitado = max(min(real(x_Cic), max_tx), -max_tx);
         im_limitado = max(min(imag(x_Cic), max_tx), -max_tx);
         

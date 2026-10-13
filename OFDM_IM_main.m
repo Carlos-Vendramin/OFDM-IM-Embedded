@@ -5,8 +5,8 @@ G = 16;
 n = N / G;           
 k = 3;               
 M = 16;             % Ordem da modulação (M-QAM)
-num_blocos = 1000;  % Numero de amostras a serem transmitidas no loop
-nCicP = 9;          %tamanho do prefixo ciclico
+num_blocos = 5000;  % Numero de amostras a serem transmitidas no loop
+nCicP = 64;          %tamanho do prefixo ciclico
 
 EbNo_vec = 0:1:20;
 BER = zeros(1, length(EbNo_vec));
@@ -128,7 +128,7 @@ for snr_indice = 1:length(EbNo_vec)
         end
         H_eff_total = H_eff .* H_channel;
                 
-        [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT_var, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T);
+        [x_bloco, y_bloco, bits_tx, txstate, rxstate, tempo, x_Cic_Final] = TxRx_Cascata(fs, Fator_Potencia, p_grupo, p_total, SNR_dB, LUT_var, N, n, G, nCicP, p1, M, k, a_filt, b_filt, txstate, rxstate, tempo, cfo_hz, Delta_tx, Delta_rx, Habilita_CFO, Compensa_CFO, Habilita_Quantizacao, Habilita_Filtro, h_T);
         
         [bits_rx, erros, x_total, y_total, y_eq] = eqlt(b, N, n, G, p_grupo, x_bloco, y_bloco, H_eff_total, Catalogo_X, Catalogo_Bits, bits_tx, erros, x_total, y_total, y_eq);
         
@@ -136,18 +136,22 @@ for snr_indice = 1:length(EbNo_vec)
     %              Sensoriamento              %
     %-----------------------------------------%
     
-        fase_range = exp(-1i * 2 * pi * (0:N-1).' * distancia / N);
+        % fase_range = exp(-1i * 2 * pi * (0:N-1).' * distancia / N);
+
+        % Atraso circular funciona pois a distância (1 bin) está dentro do CP de 64 amostras
+        alvo_tempo_atrasado = circshift(x_Cic_Final, distancia);
         fase_doppler = exp(1i * 2 * pi * velocidade * b / num_blocos);
-        alvo_refletido_freq = (x_bloco .* fase_range) * fase_doppler;
+        % alvo_refletido_freq = (x_bloco .* fase_range) * fase_doppler;
+        % 
+        alvo_tempo = alvo_tempo_atrasado.*fase_doppler;
         
-        alvo_tempo = ifft(alvo_refletido_freq, N);
-        
-        Vetor_tempo_radar = tempo_radar + (0:N-1).'/fs;
+        Vetor_tempo_radar = tempo_radar + (0:length(x_Cic_Final)-1).'/fs;
         tempo_radar = Vetor_tempo_radar(end) + (1/fs);
         
-        if Habilita_CFO && ~Compensa_CFO
-            Cfo_radar = exp(1i * 2 * pi * cfo_hz * Vetor_tempo_radar);
+        if Habilita_CFO && Compensa_CFO
+            Cfo_radar = exp(-1i * 2 * pi * cfo_hz * Vetor_tempo_radar);
             alvo_tempo = alvo_tempo .* Cfo_radar;
+           
         end
 
         if Habilita_Filtro
@@ -159,9 +163,11 @@ for snr_indice = 1:length(EbNo_vec)
             rx_im_radar = round(imag(alvo_tempo)/Delta_rx)*Delta_rx;
             alvo_tempo = rx_re_radar + (1i*rx_im_radar);
         end
-        
-        y_radar_bloco = fft(alvo_tempo, N);
-        y_radar_bloco = awgn(y_radar_bloco, SNR_dB, 'measured');
+        %Remoçao do prefixo ciclico no receptor do radar. Antes da FFT
+        alvo_tempo = awgn(alvo_tempo, SNR_dB, 'measured');
+        alvo_tempo_sem_cp = alvo_tempo(nCicP+1:end);
+
+        y_radar_bloco = fft(alvo_tempo_sem_cp, N);
         
         Radar_tx_Matriz(:, b) = x_bloco;
         Radar_rx_Matriz(:, b) = y_radar_bloco;
@@ -169,8 +175,11 @@ for snr_indice = 1:length(EbNo_vec)
     %-----------------------------------------%
 
     end
+    filtro_casado = zeros(N, num_blocos);
+    mascara_ativas = abs(Radar_tx_Matriz) > 0;
+    filtro_casado(mascara_ativas) = Radar_rx_Matriz(mascara_ativas) ./ Radar_tx_Matriz(mascara_ativas);
     
-    filtro_casado = Radar_rx_Matriz .* conj(Radar_tx_Matriz);
+    
     Range = ifft(filtro_casado, N, 1);
     Doppler = fftshift(fft(Range, num_blocos, 2), 2);
 
@@ -220,7 +229,7 @@ fig_BER=figure;
 % semilogy é usado porque a BER decai exponencialmente (eixo Y logarítmico)
 semilogy(EbNo_vec, BER, 'bo-', 'LineWidth', 2, 'MarkerSize', 8, 'MarkerFaceColor', 'b');
 grid on;
-xlabel('SNR (dB)');
+xlabel('E_B/N_0 (dB)');
 ylabel('Bit Error Rate (BER)');
 title(['Desempenho de BER do OFDM-IM (N=', num2str(N), ', K=', num2str(G*k), ', ', num2str(M), '-QAM)'])
 axis([min(EbNo_vec) max(EbNo_vec) 1e-5 1]); % Fixa os limites do gráfico
